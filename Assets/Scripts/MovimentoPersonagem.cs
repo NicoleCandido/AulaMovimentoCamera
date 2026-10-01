@@ -17,7 +17,7 @@ public class MovimentoPersonagem : MonoBehaviour
 
     private CharacterController Controller;
 
-    private Vector3 velocidadeVertical;
+    private float velocidadeY;
 
     void Start()
     {
@@ -47,16 +47,22 @@ public class MovimentoPersonagem : MonoBehaviour
                 velocidadeGiro * Time.deltaTime);
         }
 
-        if (Controller.isGrounded && velocidadeVertical.y < 0f)
-        {               
-            velocidadeVertical.y = -2f;
-        }
-
-        if (Controller.isGrounded && Input.GetButtonDown("Jump"))
+        if (Controller.isGrounded)
         {
-            velocidadeVertical.y += gravidade * Time.deltaTime;
-
-            Controller.Move(velocidadeVertical * Time.deltaTime);
+            if (velocidadeY < 0)
+            {
+                velocidadeY = -2f;
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                velocidadeY = Mathf.Sqrt(alturaPulo * -2f * gravidade);
+            }
         }
+        velocidadeY += gravidade * Time.deltaTime;
+
+        Vector3 movimento = direcao * velocidade;
+        movimento.y = velocidadeY;
+        Controller.Move(movimento * Time.deltaTime);
     }
+  
 }
